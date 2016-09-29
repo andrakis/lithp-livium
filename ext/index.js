@@ -26,8 +26,13 @@ function builtin (name, params, body) {
 	builtins[name] = {params: params, body: body};
 }
 
+builtin("exit", [], () => process.exit());
+builtin("exit", ['ExitCode'], ExitCode => process.exit(ExitCode));
 builtin("stdin", [], () => process.stdin);
 
+builtin("rawmode", ['Bool'], Bool => {
+	process.stdin.setRawMode(Bool == Atom('true') ? true : false)
+});
 builtin("on", ['Object', 'Event', 'Callback'], (Obj, Event, Callback) => {
 	return Obj.on.call(Obj, Event, Callback);
 });

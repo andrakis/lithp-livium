@@ -12,5 +12,4 @@
 	(print "LibPath to module-lib:" LibPath)
 	(import (+ LibPath "/modules"))
 	(print "Test map:" (map (list 1 2 3) #N :: ((* N 2))))
-	(print "stdin: " (stdin))
 )

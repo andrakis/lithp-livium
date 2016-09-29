@@ -3,7 +3,12 @@
 	(platform v1)
 	(var Stdin (stdin))
 
+	(rawmode true)
 	(on Stdin "data" (js-bridge #Data :: (
-		(print "Keypress: " Data)
+		(print "Keypress: " (index Data 0))
+		(if (== 3 (index Data 0)) (
+			(print "CTRL+C caught, exiting")
+			(exit 0)
+		))
 	)))
 )
