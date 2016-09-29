@@ -1,0 +1,9 @@
+(
+	(platform ext)
+	(platform v1)
+	(var Stdin (stdin))
+
+	(on Stdin "data" (js-bridge #Data :: (
+		(print "Keypress: " Data)
+	)))
+)

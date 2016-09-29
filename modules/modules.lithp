@@ -1,0 +1,17 @@
+% Top level module.
+% Pulls in submodules and exports a subset of functions.
+(
+	% Load our platform extensions
+	(platform ext)
+	% Export platform extensions
+	(export stdin/0)
+
+	% Calculate correct path to the module, modules.
+	% The .lithp extension is not required.
+	(var LibPath (get-def __dirname))
+	(print "LibPath base:" LibPath)
+	(import (+ LibPath "/lists"))
+	(export map/2)
+
+	(import (+ LibPath "/keyboard"))
+)

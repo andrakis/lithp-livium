@@ -1,0 +1,28 @@
+{
+  "name": "livium",
+  "version": "0.0.1",
+  "description": "A VI-like implementation for Lithp",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andrakis/lithp-livium.git"
+  },
+  "keywords": [
+    "lithp",
+    "vi",
+    "editor",
+    "vim"
+  ],
+  "author": "Julian \"Andrakis\" Thatcher",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/andrakis/lithp-livium/issues"
+  },
+  "homepage": "https://github.com/andrakis/lithp-livium#readme",
+  "dependencies": {
+    "lithp": "git+https://github.com/andrakis/node-lithp.git"
+  }
+}

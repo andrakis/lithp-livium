@@ -1,0 +1,16 @@
+#!node_modules/lithp/run.js
+% Entry point for Livium editor.
+%
+% vim: set syntax=lithp noet ts=4:
+% See syntax file in node_modules/lithp/syntax/vim/lithp.vim
+(
+	(print "Livium :)")
+
+	% Calculate correct path to the module, modules.
+	% The .lithp extension is not required.
+	(var LibPath (+ (get-def __dirname) "/modules"))
+	(print "LibPath to module-lib:" LibPath)
+	(import (+ LibPath "/modules"))
+	(print "Test map:" (map (list 1 2 3) #N :: ((* N 2))))
+	(print "stdin: " (stdin))
+)
