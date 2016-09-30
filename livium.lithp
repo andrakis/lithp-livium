@@ -9,7 +9,9 @@
 	% Calculate correct path to the module, modules.
 	% The .lithp extension is not required.
 	(var LibPath (+ (get-def __dirname) "/modules"))
-	(print "LibPath to module-lib:" LibPath)
 	(import (+ LibPath "/modules"))
-	(print "Test map:" (map (list 1 2 3) #N :: ((* N 2))))
+
+	(addKeyCallback #Data :: (
+		(print "Livium key:" Data)
+	))
 )

@@ -14,4 +14,8 @@
 	(export map/2)
 
 	(import (+ LibPath "/keyboard"))
+	(export addKeyCallback/1)
+	(import (+ LibPath "/terminal"))
+	(export cursor-save/0 cursor-restore/0 cursor-move/2)
+	(stop)
 )

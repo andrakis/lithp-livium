@@ -1,0 +1,18 @@
+% Interface to terminal-kit NPM library.
+%
+(
+	(platform ext)
+	(platform v1)
+	(var TerminalKit (require "terminal-kit"))
+	(var Terminal (dict-get TerminalKit "terminal"))
+	% (call (dict-get Terminal "alternateScreenBuffer"))
+	% (call (dict-get Terminal "clear"))
+	(term-print Terminal "Welcome to ^bLivium^g :)^wtest")
+
+	(def cursor-save # :: ((call (dict-get Terminal "saveCursor"))))
+	(def cursor-restore # :: ((call (dict-get Terminal "restoreCursor"))))
+	(def cursor-move #X,Y :: ((call (dict-get Terminal "moveTo") X Y)))
+
+	(export cursor-save/0 cursor-restore/0 cursor-move/2)
+	(stop)
+)

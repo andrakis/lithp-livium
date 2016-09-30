@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/andrakis/lithp-livium#readme",
   "dependencies": {
-    "lithp": "git+https://github.com/andrakis/node-lithp.git"
+    "lithp": "git+https://github.com/andrakis/node-lithp.git",
+    "terminal-kit": "^0.24.29"
   }
 }

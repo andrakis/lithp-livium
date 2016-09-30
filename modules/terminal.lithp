@@ -1,0 +1,11 @@
+(
+	(platform ext)
+	(platform v1)
+
+	(print "Terminal size:" (tty-cols) "x" (tty-rows))
+
+	(var LibPath (get-def __dirname))
+	(import (+ LibPath "/terminal_kit"))
+	(export cursor-save/0 cursor-restore/0 cursor-move/2)
+	(stop)
+)

@@ -28,13 +28,25 @@ function builtin (name, params, body) {
 
 builtin("exit", [], () => process.exit());
 builtin("exit", ['ExitCode'], ExitCode => process.exit(ExitCode));
-builtin("stdin", [], () => process.stdin);
 
+builtin("on", ['Object', 'Event', 'Callback'], (Obj, Event, Callback) => {
+	return Obj.on.call(Obj, Event, Callback);
+});
 builtin("rawmode", ['Bool'], Bool => {
 	process.stdin.setRawMode(Bool == Atom('true') ? true : false)
 });
-builtin("on", ['Object', 'Event', 'Callback'], (Obj, Event, Callback) => {
-	return Obj.on.call(Obj, Event, Callback);
+builtin("stdin", [], () => process.stdin);
+builtin("true", [], () => true);
+builtin("false", [], () => false);
+builtin("tty-cols", [], () => process.stdout.columns);
+builtin("tty-rows", [], () => process.stdout.rows);
+
+builtin('term-print', ['Term', 'Message'], (Term, Message) => Term(Message));
+
+builtin('stop', [], function() {
+	// Stop instance
+	this.stop();
+	return 'stopping instance ' + this.id;
 });
 
 exports.setup = function(lithp) {
