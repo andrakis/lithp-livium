@@ -1,0 +1,9 @@
+(
+	(platform ext)
+
+	(def at-exit #Callback :: (
+		(process-at-exit Callback))
+	)
+
+	(export at-exit/1)
+)

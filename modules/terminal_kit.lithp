@@ -5,14 +5,26 @@
 	(platform v1)
 	(var TerminalKit (require "terminal-kit"))
 	(var Terminal (dict-get TerminalKit "terminal"))
-	% (call (dict-get Terminal "alternateScreenBuffer"))
-	% (call (dict-get Terminal "clear"))
-	(term-print Terminal "Welcome to ^bLivium^g :)^wtest")
 
-	(def cursor-save # :: ((call (dict-get Terminal "saveCursor"))))
-	(def cursor-restore # :: ((call (dict-get Terminal "restoreCursor"))))
-	(def cursor-move #X,Y :: ((call (dict-get Terminal "moveTo") X Y)))
+	(def term-exit #Code :: (
+		(invoke Terminal "processExit" Code)
+	))
+	(def term-fullscreen #Opts :: (
+		(invoke Terminal "fullscreen" Opts)
+	))
+	(def term-grab-input #Bool :: (
+		(invoke Terminal "grabInput" (bool Bool))
+	))
+	(export term-exit/1 term-fullscreen/1 term-grab-input/1)
+
+	(def term-print #Message :: (
+		(terminal-print Terminal Message)
+	))
+	(export term-print/1)
+
+	(def cursor-save # :: ((invoke Terminal "saveCursor")))
+	(def cursor-restore # :: ((invoke Terminal "restoreCursor")))
+	(def cursor-move #X,Y :: ((invoke Terminal "moveTo" X Y)))
 
 	(export cursor-save/0 cursor-restore/0 cursor-move/2)
-	(stop)
 )

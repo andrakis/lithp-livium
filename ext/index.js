@@ -41,7 +41,15 @@ builtin("false", [], () => false);
 builtin("tty-cols", [], () => process.stdout.columns);
 builtin("tty-rows", [], () => process.stdout.rows);
 
-builtin('term-print', ['Term', 'Message'], (Term, Message) => Term(Message));
+builtin('process-at-exit', ['Callback'], function(Callback) {
+	return this.at_exit(() => {
+		return this.run(Callback);
+	});
+});
+
+builtin('bool', ['Atom'], atom => atom == Atom('true') ? true : false);
+
+builtin('terminal-print', ['Term', 'Message'], (Term, Message) => Term(Message));
 
 builtin('stop', [], function() {
 	// Stop instance

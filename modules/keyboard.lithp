@@ -4,12 +4,10 @@
 	(var Stdin (stdin))
 
 	(var LibPath (get-def __dirname))
-	(print "LibPath base:" LibPath)
 	(import (+ LibPath "/lists"))
 
 	(var OnKeyCallbacks (list))
 	(def addKeyCallback #Callback :: (
-		(print "Key callback registered:" Callback)
 		(set OnKeyCallbacks (++ OnKeyCallbacks (list Callback)))
 		(true)
 	))
@@ -20,7 +18,6 @@
 			(print "Key hit:" Data)
 		) (else (
 			(map OnKeyCallbacks #Callback :: (
-				(print "Calling a key callback")
 				(call Callback Data)
 			))
 		)))
@@ -28,7 +25,6 @@
 
 	(rawmode true)
 	(on Stdin "data" (js-bridge #Data :: (
-		(print "Keypress: " (index Data 0))
 		(if (== 3 (index Data 0)) (
 			(print "CTRL+C caught, exiting")
 			(exit 0)
