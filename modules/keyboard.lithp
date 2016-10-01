@@ -13,9 +13,9 @@
 	))
 	(export-global addKeyCallback/1)
 
-	(def onKeyHandler #Data :: (
+	(var OnKeyHandler #Data :: (
 		(if (== 0 (length OnKeyCallbacks)) (
-			(print "Key hit:" Data)
+			(throw "No key handler installed!")
 		) (else (
 			(map OnKeyCallbacks #Callback :: (
 				(call Callback Data)
@@ -24,11 +24,5 @@
 	))
 
 	(rawmode true)
-	(on Stdin "data" (js-bridge #Data :: (
-		(if (== 3 (index Data 0)) (
-			(print "CTRL+C caught, exiting")
-			(exit 0)
-		))
-		(onKeyHandler Data)
-	)))
+	(on Stdin "data" (js-bridge OnKeyHandler))
 )

@@ -1,10 +1,6 @@
 (
 	(def keyboard_init # :: (
 		(addKeyCallback (scope #Data :: (
-			(print "Livium key:" Data)
-			(if (== 58 (index Data 0)) (
-				(term-print "Open console")
-			))
 			(if (== 3 (index Data 0)) (
 				(print "CTRL+C caught, exiting")
 				(term-exit 0)

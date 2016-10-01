@@ -1,0 +1,26 @@
+% Mode behaviour for Livium.
+%
+% Modes handled:
+%  VIEW  View mode (move around, press : to enter command)
+(
+	(def modeViewKeyCallback #Data :: (
+		(print "Livium key:" Data)
+		(if (== 58 (index Data 0)) (
+			(term-print "Open console")
+		))
+	))
+	(var CurrentMode 'VIEW')
+
+	(var TopKeyCallback (scope #Data :: (
+		(if (== CurrentMode 'VIEW') (
+			(modeViewKeyCallback Data)
+		) (else (
+			(throw (+ "Unknown mode:" CurrentMode))
+		)))
+	)))
+
+	(def modes_init # :: (
+		(addKeyCallback TopKeyCallback)
+	))
+	(export modes_init/0)
+)
