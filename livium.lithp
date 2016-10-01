@@ -4,11 +4,17 @@
 % vim: set syntax=lithp noet ts=4:
 % See syntax file in node_modules/lithp/syntax/vim/lithp.vim
 (
-	% Calculate correct path to the module, modules.
 	% The .lithp extension is not required.
-	(var LibPath (+ (get-def __dirname) "/modules"))
+	% Calculate correct path to the source files
 	(var SrcPath (+ (get-def __dirname) "/src"))
+	(import (+ SrcPath "/keyboard"))
+	(import (+ SrcPath "/terminal"))
+
+	% Exports all needed symbols
+	(var LibPath (+ (get-def __dirname) "/modules"))
 	(import (+ LibPath "/modules"))
-	(import (+ SrcPath "/keyboard.lithp"))
-	(import (+ SrcPath "/terminal.lithp"))
+
+	% Starts source files now that module functions are available
+	(keyboard_init)
+	(terminal_init)
 )

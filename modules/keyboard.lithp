@@ -11,7 +11,7 @@
 		(set OnKeyCallbacks (++ OnKeyCallbacks (list Callback)))
 		(true)
 	))
-	(export addKeyCallback/1)
+	(export-global addKeyCallback/1)
 
 	(def onKeyHandler #Data :: (
 		(if (== 0 (length OnKeyCallbacks)) (

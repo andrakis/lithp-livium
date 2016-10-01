@@ -1,12 +1,11 @@
 (
 	(platform ext)
-	(var LibPath (+ (get-def __dirname) "/../modules"))
-	(import (+ LibPath "/modules"))
-	% (export cursor-save/0 cursor-restore/0 cursor-move/2)
 
-	(term-fullscreen true)
-	(term-print (concat "Terminal size:" (tty-cols) "x" (tty-rows) (nl)))
-	(term-print (concat "Welcome to ^bLivium^g :)^wtest" (nl)))
-
+	(def terminal_init # :: (
+		% (term-fullscreen false)
+		(term-print "Terminal size:" (tty-cols) "x" (tty-rows) "\n")
+		(term-print "Welcome to ^bLivium^g :)\n^wtest\n")
+	))
+	(export terminal_init/0)
 )
 

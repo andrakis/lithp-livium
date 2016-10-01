@@ -12,5 +12,5 @@
 		(call MapInner (head List) (tail List))
 		(Result)
 	))
-	(export map/2)
+	(export-global map/2)
 )

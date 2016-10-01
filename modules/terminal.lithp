@@ -4,8 +4,5 @@
 
 	(var LibPath (get-def __dirname))
 	(import (+ LibPath "/terminal_kit"))
-	(export term-print/1)
-	(export term-exit/1 term-fullscreen/1 term-grab-input/1)
-	(export cursor-save/0 cursor-restore/0 cursor-move/2)
 	(stop)
 )

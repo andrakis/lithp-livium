@@ -8,5 +8,5 @@
 		)))
 		(get Result)
 	))
-	(export concat/*)
+	(export-global concat/*)
 )

@@ -5,5 +5,5 @@
 		(process-at-exit Callback))
 	)
 
-	(export at-exit/1)
+	(export-global at-exit/1)
 )

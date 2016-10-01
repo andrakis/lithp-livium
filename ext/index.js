@@ -49,7 +49,13 @@ builtin('process-at-exit', ['Callback'], function(Callback) {
 
 builtin('bool', ['Atom'], atom => atom == Atom('true') ? true : false);
 
-builtin('terminal-print', ['Term', 'Message'], (Term, Message) => Term(Message));
+builtin('terminal-print', ['Term', 'Message'], (Term, Message) => {
+	if(Array.isArray(Message)) {
+		// Create an array and join the results
+		Message = Message.map(M => M.toString()).join(' ');
+	}
+	Term(Message)
+});
 
 builtin('stop', [], function() {
 	// Stop instance

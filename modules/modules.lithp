@@ -4,24 +4,14 @@
 	% Load our platform extensions
 	(platform ext)
 	% Export platform extensions
-	(export stdin/0)
+	(export-global stdin/0)
 
 	% Calculate correct path to the module, modules.
 	% The .lithp extension is not required.
 	(var LibPath (get-def __dirname))
 	(import (+ LibPath "/lists"))
-	(export map/2)
-
 	(import (+ LibPath "/strings"))
-	(export concat/*)
-
 	(import (+ LibPath "/process"))
-	(export at-exit/1)
-
 	(import (+ LibPath "/keyboard"))
-	(export addKeyCallback/1)
 	(import (+ LibPath "/terminal"))
-	(export term-print/1)
-	(export term-exit/1 term-fullscreen/1 term-grab-input/1)
-	(export cursor-save/0 cursor-restore/0 cursor-move/2)
 )

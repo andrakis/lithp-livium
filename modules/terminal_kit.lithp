@@ -15,16 +15,16 @@
 	(def term-grab-input #Bool :: (
 		(invoke Terminal "grabInput" (bool Bool))
 	))
-	(export term-exit/1 term-fullscreen/1 term-grab-input/1)
+	(export-global term-exit/1 term-fullscreen/1 term-grab-input/1)
 
-	(def term-print #Message :: (
+	(def term-print/* #Message :: (
 		(terminal-print Terminal Message)
 	))
-	(export term-print/1)
+	(export-global term-print/*)
 
 	(def cursor-save # :: ((invoke Terminal "saveCursor")))
 	(def cursor-restore # :: ((invoke Terminal "restoreCursor")))
 	(def cursor-move #X,Y :: ((invoke Terminal "moveTo" X Y)))
 
-	(export cursor-save/0 cursor-restore/0 cursor-move/2)
+	(export-global cursor-save/0 cursor-restore/0 cursor-move/2)
 )
