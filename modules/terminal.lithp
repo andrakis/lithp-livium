@@ -4,5 +4,4 @@
 
 	(var LibPath (get-def __dirname))
 	(import (+ LibPath "/terminal_kit"))
-	(stop)
 )

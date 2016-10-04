@@ -3,24 +3,30 @@
 % Modes handled:
 %  VIEW  View mode (move around, press : to enter command)
 (
-	(def modeViewKeyCallback #Data :: (
+	(var CurrentMode 'VIEW')
+	(var ModeViewKeyCallback #Data :: (
 		(print "Livium key:" Data)
 		(if (== 58 (index Data 0)) (
 			(term-print "Open console")
+			(set CurrentMode 'COMMAND')
 		))
 	))
-	(var CurrentMode 'VIEW')
-
-	(var TopKeyCallback (scope #Data :: (
-		(if (== CurrentMode 'VIEW') (
-			(modeViewKeyCallback Data)
-		) (else (
-			(throw (+ "Unknown mode:" CurrentMode))
-		)))
-	)))
-
-	(def modes_init # :: (
-		(addKeyCallback TopKeyCallback)
+	(var ModeCommandKeyCallback #Data :: (
+		(print "Commandline key:" Data)
 	))
+
+	(def modes_init (scope # :: (
+		(var CaseView (case 'VIEW' (scope # :: ((get ModeViewKeyCallback)))))
+		(var CaseCommand (case 'COMMAND' (scope # :: (get ModeCommandKeyCallback))))
+
+		(var TopKeyCallback (scope #Data :: (
+			(var ModeCallback (switch CurrentMode (list CaseView CaseCommand)))
+			(if (!= nil ModeCallback) (
+				(call ModeCallback Data)
+			))
+		)))
+
+		(addKeyCallback TopKeyCallback)
+	)))
 	(export modes_init/0)
 )

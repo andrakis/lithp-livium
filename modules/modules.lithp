@@ -10,6 +10,7 @@
 	% The .lithp extension is not required.
 	(var LibPath (get-def __dirname))
 	(import (+ LibPath "/lists"))
+	(import (+ LibPath "/switch"))
 	(import (+ LibPath "/strings"))
 	(import (+ LibPath "/process"))
 	(import (+ LibPath "/keyboard"))

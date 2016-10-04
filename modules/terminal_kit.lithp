@@ -9,13 +9,14 @@
 	(def term-exit #Code :: (
 		(invoke Terminal "processExit" Code)
 	))
+	(def term-exit # :: ((term-exit 0)))
 	(def term-fullscreen #Opts :: (
 		(invoke Terminal "fullscreen" Opts)
 	))
 	(def term-grab-input #Bool :: (
 		(invoke Terminal "grabInput" (bool Bool))
 	))
-	(export-global term-exit/1 term-fullscreen/1 term-grab-input/1)
+	(export-global term-exit/1 term-exit/0 term-fullscreen/1 term-grab-input/1)
 
 	(def term-print/* #Message :: (
 		(terminal-print Terminal Message)
