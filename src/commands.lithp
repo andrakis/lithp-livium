@@ -9,7 +9,6 @@
 	(export add-command/2)
 
 	(def handle-command #Command :: (
-		(print "Command:" Command)
 		(call (switch Command CommandList) Command)
 	))
 	(export handle-command/1)

@@ -7,15 +7,16 @@
 	% The .lithp extension is not required.
 	% Calculate correct path to the source files
 	(var SrcPath (+ (get-def __dirname) "/src"))
+
+	% This module provides functions for keyboard source file.
+	(import (+ SrcPath "/modes"))
+
 	% Import source modules first, then import modules which export to all
 	% active Lithp instances (ie, the following modules.)
 	% Later we call the init function for each source module.
 	% The order here is important.
 	(import (+ SrcPath "/keyboard"))
 	(import (+ SrcPath "/terminal"))
-
-	% This module provides functions for keyboard source file.
-	(import (+ SrcPath "/modes"))
 
 	% Import the modules. These will export to the source modules already
 	% loaded.

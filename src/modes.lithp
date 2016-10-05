@@ -1,32 +1,53 @@
 % Mode behaviour for Livium.
 %
 % Modes handled:
-%  VIEW  View mode (move around, press : to enter command)
+%  VIEW     View mode (move around, press : to enter command)
+%  COMMAND  Command mode (brings up command entry)
 (
+	(platform ext)
+	(import (+ (get-def "__dirname") "/commands"))
+	(var CommandBuffer "")
+	(var LastCommandLength 0)
+	(def open_command # :: (
+		(set CurrentMode 'COMMAND')
+		(cursor-save)
+		(cursor-move 0 (term-rows))
+		(term-print (+ "\r" (repeat " " (term-cols)) "\r^b:^w"))
+	))
 	(var CurrentMode 'VIEW')
 	(var ModeViewKeyCallback #Data :: (
-		(print "Livium key:" Data)
+		% (print "Livium key:" Data)
 		(if (== 58 (index Data 0)) (
-			(term-print "Open console")
-			(set CurrentMode 'COMMAND')
+			(open_command)
 		))
 	))
 	(var ModeCommandKeyCallback #Data :: (
-		(print "Commandline key:" Data)
+		% (print "Commandline key:" Data)
+		(var Str (to-string Data))
+		(var List (split Str ""))
+		(term-print Str)
+		(map List #Ch :: (
+			(if (== Ch "\r") (
+				(handle-command CommandBuffer)
+				(set CommandBuffer "")
+				(set CurrentMode 'VIEW')
+			) (else (
+				(set CommandBuffer (+ CommandBuffer Ch))
+			)))
+		))
 	))
 
 	(def modes_init (scope # :: (
 		(var CaseView (case 'VIEW' (scope # :: ((get ModeViewKeyCallback)))))
 		(var CaseCommand (case 'COMMAND' (scope # :: (get ModeCommandKeyCallback))))
+		(var CaseDefault (default #Value :: (throw (+ "Unknown mode: " Value))))
 
 		(var TopKeyCallback (scope #Data :: (
-			(var ModeCallback (switch CurrentMode (list CaseView CaseCommand)))
-			(if (!= nil ModeCallback) (
-				(call ModeCallback Data)
-			))
+			(call (switch CurrentMode (list CaseView CaseCommand CaseDefault)) Data)
 		)))
 
 		(addKeyCallback TopKeyCallback)
+		(commands-init)
 	)))
-	(export modes_init/0)
+	(export-global modes_init/0)
 )
