@@ -1,0 +1,29 @@
+(
+	(platform v1)
+	(var CommandList nil)
+
+	(def add-command #Name,Handler :: (
+		(var CaseClause (case Name Handler))
+		(set CommandList (++ CommandList (list CaseClause)))
+	))
+	(export add-command/2)
+
+	(def handle-command #Command :: (
+		(print "Command:" Command)
+		(call (switch Command CommandList) Command)
+	))
+	(export handle-command/1)
+
+	(var UnknownCommand (scope #Value :: (
+		(term-print (+ "^rUnknown command: " Value "^w"))
+	)))
+
+	(def commands-init (scope # :: (
+		(set CommandList (list (default (scope #Given :: ((get UnknownCommand))))))
+		(add-command "quit" #Parameters :: ((scope # :: (
+			(print "Quit time")
+			(term-exit)
+		))))
+	)))
+	(export-global commands-init/0)
+)

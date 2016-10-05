@@ -1,9 +1,23 @@
 (
 	(platform ext)
 
+	% These are managed with functions as they as updated when the terminal
+	% is resized.
+	(var TerminalColumns (tty-cols))
+	(var TerminalRows    (tty-rows))
+	(def term-cols # ::  (TerminalColumns))
+	(def term-rows # ::  (TerminalRows))
+	(export-global term-cols/0 term-rows/0)
+
 	(def terminal_init # :: (
-		% (term-fullscreen false)
-		(term-print "Terminal size:" (tty-cols) "x" (tty-rows) "\n")
+		% TODO: Add listen event for terminal resize.
+
+		% Don't call term-fullscreen in debug mode.
+		% Doing so prevents scrolling back through debug messages.
+		(if (!= true (get-def 'DEBUG')) (
+			(term-fullscreen true)
+		))
+		(term-print "Terminal size:" (term-cols) "x" (term-rows) "\n")
 		(term-print "Welcome to ^bLivium^g :)\n^wtest\n")
 	))
 	(export terminal_init/0)

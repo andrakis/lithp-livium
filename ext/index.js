@@ -63,6 +63,8 @@ builtin('stop', [], function() {
 	return 'stopping instance ' + this.id;
 });
 
+builtin('repeat', ['String', 'Count'], (Str, Count) => Str.repeat(Count));
+
 exports.setup = function(lithp) {
 	var count = 0;
 	for(var k in builtins) {
