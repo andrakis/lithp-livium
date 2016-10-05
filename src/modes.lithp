@@ -17,8 +17,16 @@
 	(var CurrentMode 'VIEW')
 	(var ModeViewKeyCallback #Data :: (
 		% (print "Livium key:" Data)
-		(if (== 58 (index Data 0)) (
-			(open_command)
+		(var Str (to-string Data))
+		(var List (split Str ""))
+		(map List #Ch :: (
+			(if (== CurrentMode 'VIEW') (
+				(if (== 58 (index Data 0)) (
+					(open_command)
+				))
+			) (else (
+				(call CallCurrentCallback Ch)
+			)))
 		))
 	))
 	(var ModeCommandKeyCallback #Data :: (
@@ -38,13 +46,18 @@
 		))
 	))
 
+	(var CallCurrentCallback nil)
+
 	(def modes_init (scope # :: (
 		(var CaseView (case 'VIEW' (scope # :: ((get ModeViewKeyCallback)))))
 		(var CaseCommand (case 'COMMAND' (scope # :: (get ModeCommandKeyCallback))))
 		(var CaseDefault (default #Value :: (throw (+ "Unknown mode: " Value))))
+		(set CallCurrentCallback (scope #Data :: (
+			(call (switch CurrentMode (list CaseView CaseCommand CaseDefault)) Data)
+		)))
 
 		(var TopKeyCallback (scope #Data :: (
-			(call (switch CurrentMode (list CaseView CaseCommand CaseDefault)) Data)
+			(call CallCurrentCallback Data)
 		)))
 
 		(addKeyCallback TopKeyCallback)

@@ -33,7 +33,8 @@ builtin("on", ['Object', 'Event', 'Callback'], (Obj, Event, Callback) => {
 	return Obj.on.call(Obj, Event, Callback);
 });
 builtin("rawmode", ['Bool'], Bool => {
-	process.stdin.setRawMode(Bool == Atom('true') ? true : false)
+	if(process.stdin.isTTY)
+		process.stdin.setRawMode(Bool == Atom('true') ? true : false)
 });
 builtin("stdin", [], () => process.stdin);
 builtin("true", [], () => true);

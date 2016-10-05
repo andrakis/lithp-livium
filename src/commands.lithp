@@ -1,3 +1,7 @@
+%
+% Implements commands that Livium accepts.
+% Commands are those entered on the console, however keymapping allows
+% commands to be used in VIEW mode to perform standard actions.
 (
 	(platform v1)
 	(var CommandList nil)
