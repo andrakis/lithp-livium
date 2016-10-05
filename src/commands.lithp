@@ -17,12 +17,18 @@
 		(term-print (+ "^rUnknown command: " Value "^w"))
 	)))
 
+	(var CommandQuit #Parameters :: ((scope # :: (
+		(import (+ (get-def "__dirname") "/../src/terminal"))
+		(term-fullscreen false)
+		(term-print "Quit time")
+		(term-exit)
+	))))
+
 	(def commands-init (scope # :: (
 		(set CommandList (list (default (scope #Given :: ((get UnknownCommand))))))
-		(add-command "quit" #Parameters :: ((scope # :: (
-			(print "Quit time")
-			(term-exit)
-		))))
+
+		(add-command "quit" CommandQuit)
+		(add-command "q" CommandQuit)
 	)))
 	(export-global commands-init/0)
 )
