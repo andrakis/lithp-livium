@@ -1,0 +1,23 @@
+{
+	// vim: set syntax=javascript:
+	//
+	// Provides settings for Livium
+	//
+	// These settings use Lithp as their scripting langauge.
+	// In the future, a .vimrc parser will allow overrides.
+
+	// These keybindings take effect in VIEW mode
+	"keybindings": {
+		"a": "(activateCommand 'append')",
+		"i": "(activateCommand 'insert')",
+		"I": "(activateCommand 'insert' 0"),
+		// -1 means end of current line
+		"A": "(activateCommand 'append' -1)",
+		// (def moveCursor #ColOffset,RowOffset :: (...))
+		"UP": "(activateCommand 'moveCursor' 0 -1)",
+		"DOWN": "(activateCommand 'moveCursor' 0 1)",
+		"LEFT": "(activateCommand 'moveCursor' -1 0)",
+		"RIGHT": "(activateCommand 'moveCursor' 1 0)",
+		":": "(activateCommand 'openConsole')"
+	}
+}

@@ -1,0 +1,14 @@
+% Functions for working with Buffers.
+% File data is loaded into the main buffer and we move around it.
+%
+% This provides functions for working with any buffer, such as inserting
+% strings.
+% It may be prudent to convert these to using UInt8Array's in the future.
+% This may provide better runtime performance, particularly if strict mode
+% can be enabled.
+(
+	(platform ext)
+	(var DEFAULT_SIZE (* 16 1024))
+	(def buffer-new # :: ((buffer-new DEFAULT_SIZE)))
+	(def buffer-new #Size :: ((ext-buffer Size)))
+)

@@ -26,8 +26,8 @@ function builtin (name, params, body) {
 	builtins[name] = {params: params, body: body};
 }
 
-builtin("exit", [], () => process.exit());
-builtin("exit", ['ExitCode'], ExitCode => process.exit(ExitCode));
+builtin("exit/0", [], () => process.exit());
+builtin("exit/1", ['ExitCode'], ExitCode => process.exit(ExitCode));
 
 builtin("on", ['Object', 'Event', 'Callback'], (Obj, Event, Callback) => {
 	return Obj.on.call(Obj, Event, Callback);
@@ -53,7 +53,7 @@ builtin('bool', ['Atom'], atom => atom == Atom('true') ? true : false);
 builtin('terminal-print', ['Term', 'Message'], (Term, Message) => {
 	if(Array.isArray(Message)) {
 		// Create an array and join the results
-		Message = Message.map(M => M.toString()).join(' ');
+		Message = Message.map(M => (M ? M.toString() : util.inspect(M))).join(' ');
 	}
 	Term(Message)
 });
@@ -65,6 +65,9 @@ builtin('stop', [], function() {
 });
 
 builtin('repeat', ['String', 'Count'], (Str, Count) => Str.repeat(Count));
+
+builtin('ext-buffer/1', ['Size'], Size => new Buffer(Size));
+builtin('ext-buffer/2', ['Size', 'Opts'], (Size, Opts) => new Buffer(Size, Opts));
 
 exports.setup = function(lithp) {
 	var count = 0;

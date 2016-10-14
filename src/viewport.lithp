@@ -1,0 +1,71 @@
+% Manages a veiwport.
+% A viewport looks into a screenbuffer and has a certain size with which to
+% render the screenbuffer into.
+% Viewports are sent keypresses, which are sent to textbuffers to update them,
+% and then the screenbuffer is updated and lines redrawn.
+(
+	(platform v1)
+	(platform ext)
+	(var ViewportTopLeft "+")
+	(var ViewportTopRight "+")
+	(var ViewportTop "-")
+	(var ViewportSide "|")
+	(var ViewportBottomLeft "+")
+	(var ViewportBottomRight "+")
+	(var ViewportBottom "-")
+	(var RenderBorder (get-def 'BORDER'))
+
+	(def viewport-new #StartX,StartY,EndX,EndY,Screenbuffer :: (
+		(dict 
+			(tuple startx StartX) 
+			(tuple starty StartY) 
+			(tuple endx EndX) 
+			(tuple endy EndY) 
+			(tuple screenbuffer Screenbuffer)
+		)
+	))
+	(def viewport-render #Viewport :: (
+		(if (== true RenderBorder) (
+			(cursor-save)
+			(var StartX (dict-get Viewport startx))
+			(var EndX (dict-get Viewport endx))
+			(var StartY (dict-get Viewport starty))
+			(var EndY (dict-get Viewport endy))
+			(cursor-move StartX StartY)
+			(var Length (- EndX StartX))
+			(var Height (- EndY StartY))
+			(cursor-move (dict-get Viewport startx) (dict-get Viewport starty))
+			(term-print (+ ViewportTopLeft (repeat ViewportTop (- Length 2)) ViewportTopRight))
+			(each (seq 2 Height) (scope #LineNo :: (
+				(cursor-move StartX (+ StartY LineNo))
+				(term-print ViewportSide)
+				(cursor-move EndX (+ StartY LineNo))
+				(term-print ViewportSide)
+			)))
+			(cursor-move (dict-get Viewport startx) (+ (dict-get Viewport starty) Height))
+			(term-print (+ 
+				ViewportBottomLeft 
+				(repeat ViewportBottom (- Length 2)) 
+				ViewportBottomRight)
+			)
+			(cursor-restore)
+		))
+		(atom nil)
+	))
+	(export-global viewport-new/5 viewport-render/1)
+
+	% TODO: replace with a list
+	(var Viewport nil)
+	(def viewport_init # :: (
+		(set Viewport (viewport-new 0 0 (term-cols) (- (term-rows) 1) nil))
+		(viewport-render Viewport)
+	))
+	(export-global viewport_init/0)
+
+	(if (== true (get-def 'TEST')) (
+		(import (+ (get-def "__dirname") "/../modules/modules"))
+		(set Viewport (viewport-new 0 0 80 25 nil))
+		(viewport-render Viewport)
+		(exit)
+	))
+)

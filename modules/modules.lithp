@@ -15,4 +15,5 @@
 	(import (+ LibPath "/process"))
 	(import (+ LibPath "/keyboard"))
 	(import (+ LibPath "/terminal"))
+	(import (+ LibPath "/file"))
 )

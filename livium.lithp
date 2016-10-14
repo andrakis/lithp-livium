@@ -10,6 +10,10 @@
 
 	% This module provides functions for keyboard source file.
 	(import (+ SrcPath "/modes"))
+	% These modules provide the buffer functionality.
+	(import (+ SrcPath "/viewport"))
+	(import (+ SrcPath "/text-buffer"))
+	(import (+ SrcPath "/screen-buffer"))
 
 	% Import source modules first, then import modules which export to all
 	% active Lithp instances (ie, the following modules.)
@@ -17,6 +21,7 @@
 	% The order here is important.
 	(import (+ SrcPath "/keyboard"))
 	(import (+ SrcPath "/terminal"))
+	(import (+ SrcPath "/rc"))
 
 	% Import the modules. These will export to the source modules already
 	% loaded.
@@ -27,4 +32,5 @@
 	(keyboard_init)
 	(terminal_init)
 	(modes_init)
+	(viewport_init)
 )

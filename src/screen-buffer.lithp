@@ -1,0 +1,14 @@
+% Manages the screen buffer.
+% The screen buffer is refocused and redrawn as necessary.
+(
+	(var ScreenBuffer (atom nil))
+	(def screenbuf-set #Screen :: (
+		(set ScreenBuffer Screen)
+	))
+	(def screenbuf-get # :: (
+		(ScreenBuffer)
+	))
+
+	(export-global screenbuf-set/1 screenbuf-get/0)
+)
+

@@ -6,14 +6,19 @@
 (
 	(platform ext)
 	(import (+ (get-def "__dirname") "/commands"))
+
 	(var CommandBuffer "")
 	(var LastCommandLength 0)
-	(def open_command # :: (
-		(set CurrentMode 'COMMAND')
-		(cursor-save)
-		(cursor-move 0 (term-rows))
-		(term-print (+ "\r" (repeat " " (term-cols)) "\r^b:^w"))
+	(def open-command # :: (
+		(erase-command)
+		(term-print "\r^g:^w")
 	))
+	(def erase-command # :: (
+		(set CurrentMode 'COMMAND')
+		(cursor-move 0 (term-rows))
+		(term-print (+ "\r" (repeat " " (term-cols))))
+	))
+	(export-global open-command/0 erase-command/0)
 	(var CurrentMode 'VIEW')
 	(var ModeViewKeyCallback #Data :: (
 		% (print "Livium key:" Data)
@@ -22,7 +27,7 @@
 		(map List #Ch :: (
 			(if (== CurrentMode 'VIEW') (
 				(if (== 58 (index Data 0)) (
-					(open_command)
+					(open-command)
 				))
 			) (else (
 				(call CallCurrentCallback Ch)

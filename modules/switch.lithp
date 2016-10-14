@@ -71,7 +71,7 @@
 		(switch (head Args) (tail Args))
 	))
 	% This section is disabled. It tests the implementation.
-	(if (== disabled (get-def 'DEBUG')) (
+	(if (== true (get-def 'TEST')) (
 		(print "Debug is on, running tests")
 		(var Case1 (case 1 # :: ("one")))
 		(var Case2 (case 2 # :: ("two")))

@@ -1,0 +1,10 @@
+% Loads and processes rc/liviumrc, which is in a JSON format
+% that also supports tabs and comments.
+(
+	(platform ext)
+	(platform v1)
+	(var Settings {})
+	(def loadRC # :: (
+		(print "??")
+	))
+)

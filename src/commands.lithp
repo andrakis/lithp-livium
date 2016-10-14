@@ -6,33 +6,67 @@
 	(platform v1)
 	(var CommandList nil)
 
+	(import (+ (get-def "__dirname") "/commands/file"))
+
 	(def add-command #Name,Handler :: (
 		(var CaseClause (case Name Handler))
 		(set CommandList (++ CommandList (list CaseClause)))
 	))
-	(export add-command/2)
+	(def print-error #Error :: (
+		(term-print (+ "^r" Error "^:"))
+	))
+	(export-global add-command/2 print-error/1)
 
+	(var RegexSplitCommand (regex "([A-Za-z]+)(?: (.*))?$"))
 	(def handle-command #Command :: (
-		(call (switch Command CommandList) Command)
+		(var Parts (match Command RegexSplitCommand))
+		(if (!= (null) Parts) (
+			(var CommandName (index Parts 1))
+			(var Params (index Parts 2))
+			(if (== (undefined) Params) (
+				(set Params nil)
+			))
+			(call (switch CommandName CommandList) Params)
+		) (else (
+			(term-print "^r ^:")
+			(cursor-restore)
+		)))
 	))
 	(export handle-command/1)
 
-	(var UnknownCommand (scope #Value :: (
-		(term-print (+ "^rUnknown command: " Value "^w"))
+	(var UnknownCommand (scope #X :: (
+		(print-error (+ "^rUnknown command: " X "^w"))
 	)))
 
-	(var CommandQuit #Parameters :: ((scope # :: (
-		(import (+ (get-def "__dirname") "/../src/terminal"))
+	(export-global print-error/1)
+
+	(var CommandQuit # :: ((scope #Parameters :: (
 		(term-fullscreen false)
-		(term-print "Quit time")
+		(term-print "Quit time" Parameters)
 		(term-exit)
 	))))
 
+	(var CommandOpen (scope # :: ((scope #Parameters :: (
+		(if (== nil Parameters) (
+			(print-error "E32: No file name")
+		) (else (
+			(print-error (+ "^gOpening file: " Parameters))
+			(readFileAsync Parameters (scope #Err,Data :: (
+				(if (!= (undefined) Err) (
+					(print-error (+ "Unable to open file: " Parameters))
+				))
+			)))
+		)))
+	)))))
+
 	(def commands-init (scope # :: (
-		(set CommandList (list (default (scope #Given :: ((get UnknownCommand))))))
+		% TODO: This is ugly!
+		(set CommandList (list (default (scope #Given :: (scope # :: (call UnknownCommand Given))))))
 
 		(add-command "quit" CommandQuit)
 		(add-command "q" CommandQuit)
+
+		(add-command "o" CommandOpen)
 	)))
 	(export-global commands-init/0)
 )

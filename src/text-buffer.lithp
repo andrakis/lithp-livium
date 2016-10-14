@@ -1,0 +1,14 @@
+% Manages the text buffer.
+% Allows insertion, deletion, etc. Also keeps track of extended details
+% such as colors.
+(
+	(var TextBuffer (atom nil))
+	(def textbuf-set #Text :: (
+		(set TextBuffer Text)
+	))
+	(def textbuf-get # :: (
+		(TextBuffer)
+	))
+
+	(export-global textbuf-set/1 textbuf-get/0)
+)

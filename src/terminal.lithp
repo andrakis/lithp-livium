@@ -14,7 +14,7 @@
 
 		% Don't call term-fullscreen in debug mode.
 		% Doing so prevents scrolling back through debug messages.
-		(if (!= true (get-def 'DEBUG')) (
+		(if (and (!= true (get-def 'DEBUG')) (!= true (get-def 'TEST'))) (
 			(term-fullscreen true)
 		))
 		(term-print "Terminal size:" (term-cols) "x" (term-rows) "\n")
