@@ -31,33 +31,29 @@
 			(var EndX (dict-get Viewport endx))
 			(var StartY (dict-get Viewport starty))
 			(var EndY (dict-get Viewport endy))
-			(cursor-move StartX StartY)
 			(var Length (- EndX StartX))
 			(var Height (- EndY StartY))
-			(cursor-move (dict-get Viewport startx) (dict-get Viewport starty))
-			(term-print (+ ViewportTopLeft (repeat ViewportTop (- Length 2)) ViewportTopRight))
+			(var Output "")
+			(set Output (+ ViewportTopLeft (repeat ViewportTop (- Length 2)) ViewportTopRight))
 			(each (seq 2 Height) (scope #LineNo :: (
-				(cursor-move StartX (+ StartY LineNo))
-				(term-print ViewportSide)
-				(cursor-move EndX (+ StartY LineNo))
-				(term-print ViewportSide)
+				(set Output (+ Output "\n" ViewportSide (repeat " " (- Length 2)) ViewportSide))
 			)))
-			(cursor-move (dict-get Viewport startx) (+ (dict-get Viewport starty) Height))
-			(term-print (+ 
+			(set Output (+ Output "\n" 
 				ViewportBottomLeft 
 				(repeat ViewportBottom (- Length 2)) 
 				ViewportBottomRight)
 			)
+			(cursor-move StartX StartY)
+			(term-print Output)
 			(cursor-restore)
 		))
-		(atom nil)
 	))
 	(export-global viewport-new/5 viewport-render/1)
 
 	% TODO: replace with a list
 	(var Viewport nil)
 	(def viewport_init # :: (
-		(set Viewport (viewport-new 0 0 (term-cols) (- (term-rows) 1) nil))
+		(set Viewport (viewport-new 0 0 (term-cols) (- (term-rows) 2) nil))
 		(viewport-render Viewport)
 	))
 	(export-global viewport_init/0)
