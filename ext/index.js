@@ -69,6 +69,22 @@ builtin('repeat', ['String', 'Count'], (Str, Count) => Str.repeat(Count));
 builtin('ext-buffer/1', ['Size'], Size => new Buffer(Size));
 builtin('ext-buffer/2', ['Size', 'Opts'], (Size, Opts) => new Buffer(Size, Opts));
 
+builtin('push', ['Var', 'Value'], (Var, Value) => {
+	Var.push(Value);
+	return Var;
+});
+builtin('pop', ['Var'], Var => Var.pop());
+builtin('shift', ['Var'], Var => Var.shift());
+builtin('unshift', ['Arr1', 'Arr2'], (Arr1, Arr2) => Arr1.concat(Arr2));
+builtin('concat', ['Arr1', 'Arr2'], (Arr1, Arr2)  => Arr1.concat(Arr2));
+builtin('join', ['Var', 'Separator'], (Var, Separator) => Var.join(Separator));
+builtin('slice/2', ['Arr', 'Begin'], (Arr, Begin) => Arr.slice(Begin));
+builtin('slice/3', ['Arr', 'Begin', 'End'], (Arr, Begin, End) => Arr.slice(Begin, End));
+builtin('splice/3', ['Arr', 'Start', 'DeleteCount'], (Arr, Start, DeleteCount) => Arr.splice(Start, DeleteCount));
+builtin('splice/4', ['Arr', 'Start', 'DeleteCount', 'Item1'], (Arr, Start, DeleteCount, Item1) => Arr.splice(Start, DeleteCount, Item1));
+builtin('index-of/2', ['Arr', 'Search'], (Arr, Search) => Arr.indexOf(Search));
+builtin('index-of/2', ['Arr', 'Search', 'From'], (Arr, Search, From) => Arr.indexOf(Search, From));
+
 exports.setup = function(lithp) {
 	var count = 0;
 	for(var k in builtins) {

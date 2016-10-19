@@ -15,38 +15,55 @@
 	(var ViewportBottom "-")
 	(var RenderBorder (get-def 'BORDER'))
 
+	(var CurrentViewport 0)
+	(var Viewports (list))
+
 	(def viewport-new #StartX,StartY,EndX,EndY,Screenbuffer :: (
 		(dict 
 			(tuple startx StartX) 
 			(tuple starty StartY) 
 			(tuple endx EndX) 
 			(tuple endy EndY) 
-			(tuple screenbuffer Screenbuffer)
+			(tuple screenbuffer Screenbuffer) 
+			(tuple marker 0) % where the cursor is
 		)
 	))
 	(def viewport-render #Viewport :: (
+		(cursor-save)
+		(var StartX (dict-get Viewport startx))
+		(var EndX (dict-get Viewport endx))
+		(var StartY (dict-get Viewport starty))
+		(var EndY (dict-get Viewport endy))
+		(var Length (- EndX StartX))
+		(var Height (- EndY StartY))
+		(var Output "")
 		(if (== true RenderBorder) (
-			(cursor-save)
-			(var StartX (dict-get Viewport startx))
-			(var EndX (dict-get Viewport endx))
-			(var StartY (dict-get Viewport starty))
-			(var EndY (dict-get Viewport endy))
-			(var Length (- EndX StartX))
-			(var Height (- EndY StartY))
-			(var Output "")
 			(set Output (+ ViewportTopLeft (repeat ViewportTop (- Length 2)) ViewportTopRight))
-			(each (seq 2 Height) (scope #LineNo :: (
-				(set Output (+ Output "\n" ViewportSide (repeat " " (- Length 2)) ViewportSide))
-			)))
+		))
+		(var RenderLine (scope # :: (
+			(repeat " " (- Length 2))
+		)))
+		(each (seq 2 Height) (scope #LineNo :: (
+			(if (== true RenderBorder) (
+				(set Output (+ Output "\n" ViewportSide (call RenderLine) ViewportSide))
+			))
+		)))
+		(if (== true RenderBorder) (
 			(set Output (+ Output "\n" 
 				ViewportBottomLeft 
 				(repeat ViewportBottom (- Length 2)) 
 				ViewportBottomRight)
 			)
-			(cursor-move StartX StartY)
-			(term-print Output)
-			(cursor-restore)
 		))
+		(cursor-move StartX StartY)
+		(term-print Output)
+		(cursor-restore)
+	))
+
+	(def viewports-render # :: (
+		(each Viewports (scope #Viewport :: (
+			(viewport-render Viewport)
+		)))
 	))
 	(export-global viewport-new/5 viewport-render/1)
 
@@ -54,7 +71,8 @@
 	(var Viewport nil)
 	(def viewport_init # :: (
 		(set Viewport (viewport-new 0 0 (term-cols) (- (term-rows) 2) nil))
-		(viewport-render Viewport)
+		(push Viewports Viewport)
+		(viewports-render)
 	))
 	(export-global viewport_init/0)
 
