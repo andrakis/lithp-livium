@@ -3,6 +3,9 @@
  *
  * Adds new builtins to Lithp.
  */
+
+"use strict";
+
 var util = require('util'),
 	inspect = util.inspect;
 var lithp = require(__dirname + '/../node_modules/lithp/index'),

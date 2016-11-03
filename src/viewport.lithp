@@ -18,6 +18,11 @@
 	(var CurrentViewport 0)
 	(var Viewports (list))
 
+	(def read-lines #Viewport,Lines :: (
+		(var Marker (dict-get Viewport marker))
+		(var Lines (list))
+	))
+
 	(def viewport-new #StartX,StartY,EndX,EndY,Screenbuffer :: (
 		(dict 
 			(tuple startx StartX) 
@@ -25,28 +30,35 @@
 			(tuple endx EndX) 
 			(tuple endy EndY) 
 			(tuple screenbuffer Screenbuffer) 
-			(tuple marker 0) % where the cursor is
+			(tuple cursorLine 0) 
+			(tuple cursorColumn 0)
 		)
 	))
 	(def viewport-render #Viewport :: (
 		(cursor-save)
 		(var StartX (dict-get Viewport startx))
-		(var EndX (dict-get Viewport endx))
+		(var EndX   (dict-get Viewport endx))
 		(var StartY (dict-get Viewport starty))
-		(var EndY (dict-get Viewport endy))
+		(var EndY   (dict-get Viewport endy))
 		(var Length (- EndX StartX))
 		(var Height (- EndY StartY))
 		(var Output "")
 		(if (== true RenderBorder) (
 			(set Output (+ ViewportTopLeft (repeat ViewportTop (- Length 2)) ViewportTopRight))
 		))
-		(var RenderLine (scope # :: (
-			(repeat " " (- Length 2))
+		(var RenderLine (scope #LineNo :: (
+			% TODO: Get LineNo + cursorLine and grab (EndX-StartX) characters
+			% TODO: Pad line numbers
+			(+ LineNo (repeat " " (- Length 5)))
 		)))
+		(var BLeft (get ViewportSide))
+		(var BRight (get ViewportSide))
+		(if (== false RenderBorder) (
+			(set BLeft "")
+			(set BRight " ")
+		))
 		(each (seq 2 Height) (scope #LineNo :: (
-			(if (== true RenderBorder) (
-				(set Output (+ Output "\n" ViewportSide (call RenderLine) ViewportSide))
-			))
+			(set Output (+ Output "\n" BLeft (call RenderLine (- LineNo 1)) BRight))
 		)))
 		(if (== true RenderBorder) (
 			(set Output (+ Output "\n" 
@@ -65,7 +77,7 @@
 			(viewport-render Viewport)
 		)))
 	))
-	(export-global viewport-new/5 viewport-render/1)
+	(export-global viewport-new/5 viewports-render/0)
 
 	% TODO: replace with a list
 	(var Viewport nil)

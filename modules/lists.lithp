@@ -47,12 +47,14 @@
 	))
 
 	% Sequence. Count from N0 to N1.
-	(def seq #N0,N1 :: ((seq N0 N1 1)))
+	(def seq #N0,N1 :: (
+		(seq N0 N1 (? (< N0 N1) 1 -1))
+	))
 	(def seq #N0,N1,Inc :: (
 		(var Result (list))
 		(var SeqInner (scope #N :: (
 			(set Result (++ Result (list N)))
-			(if (< N N1) (
+			(if (? (== 1 Inc) (< N N1) (> N N1)) (
 				(call SeqInner (+ N Inc))
 			))
 		)))
@@ -62,6 +64,7 @@
 
 	(export-global map/2 foldl/3 each/2 seq/2 seq/3)
 
+	% Pass -DTEST to livium.lithp to enable.
 	(if (== true (get-def 'TEST')) (
 		(var SampleList (list 1 2 4 8 16 32))
 		(print "Map test: " (map SampleList #N :: ((* N 2))))
@@ -72,6 +75,7 @@
 			(print "N:" N)
 		))
 		(print "Seq test:" (seq 1 5))
+		(print "Reverse seq test:" (seq 5 1))
 	))
 
 )
