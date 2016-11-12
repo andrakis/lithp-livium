@@ -9,8 +9,8 @@
 	% Calculate correct path to the module, modules.
 	% The .lithp extension is not required.
 	(var LibPath (get-def __dirname))
-	(import (+ LibPath "/lists"))
-	(import (+ LibPath "/switch"))
+	(import "lists")
+	(import "switch")
 	(import (+ LibPath "/strings"))
 	(import (+ LibPath "/process"))
 	(import (+ LibPath "/keyboard"))
