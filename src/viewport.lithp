@@ -76,7 +76,7 @@
 				% Grab (EndX-StartX) characters
 				(set LineFromBuffer (slice LineFromBuffer 0 Length))
 				(var LinePadding (repeat " " (- Length (length LineFromBuffer) (length BottomLineStr) 3)))
-				(+ LineStr Padding LineFromBuffer LinePadding)
+				(+ Padding LineStr " " LineFromBuffer LinePadding)
 			) (else (
 				(var LinePadding (repeat " " (- Length (length BottomLineStr) 5)))
 				(+ (repeat " " (+ (length LineStr) (length BottomLineStr))) Padding LinePadding)
