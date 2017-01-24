@@ -1,0 +1,16 @@
+(
+	(var Path (require "path"))
+
+	(def path-basename #P :: ((invoke Path basename P)))
+	(def path-delimiter # :: ((dict-get Path delimiter)))
+	(def path-dirname #P :: ((invoke Path dirname P)))
+	(def path-extname #P :: ((invoke Path extname P)))
+	(def path-resolve #X :: ((invoke Path resolve X)))
+
+	(export-global path-basename/1 path-delimiter/0 path-dirname/1)
+	(export-global path-extname/1 path-resolve/1)
+
+	(if (get-def "TEST") (
+		(print (path-resolve "README.md"))
+	))
+)
