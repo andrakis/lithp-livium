@@ -1,6 +1,6 @@
 LIBS=
 RUN=./run
-RUNFLAGS=
+RUNFLAGS=-DBORDER
 APP=livium.lithp
 
 .PHONY: modules src clean run node_modules/lithp
@@ -17,7 +17,7 @@ FINAL=
 	$(eval FINAL += $<)
 
 run: $(APP) $(SUBDIRS)
-	$(RUN) livium.ast
+	$(RUN) livium.ast $(RUNFLAGS)
 
 final:
 	@if [ "$(FINAL)"x != "x" ]; then $(RUN) -c $(FINAL); fi

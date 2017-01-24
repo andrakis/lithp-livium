@@ -75,7 +75,7 @@
 				(set LineFromBuffer (index TextList LineNo))
 				% Grab (EndX-StartX) characters
 				(set LineFromBuffer (slice LineFromBuffer 0 Length))
-				(var LinePadding (repeat " " (- Length (length LineFromBuffer) (length BottomLineStr) 3)))
+				(var LinePadding (repeat " " (- Length (length LineFromBuffer) (length BottomLineStr) 4)))
 				(+ Padding LineStr " " LineFromBuffer LinePadding)
 			) (else (
 				(var LinePadding (repeat " " (- Length (length BottomLineStr) 5)))
