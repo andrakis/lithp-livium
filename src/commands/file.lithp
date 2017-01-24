@@ -1,4 +1,32 @@
 % Provides file commands
 (
-	(var Unused true)
+	(import "file")
+	(import "path")
+
+	(def commands-file-init # :: (
+		(var CommandOpen (scope # :: ((scope #Parameters :: (
+			(if (== nil Parameters) (
+				(print-error "E32: No file name")
+			) (else (
+				(var Resolved (path-resolve Parameters))
+				(if (and (file-exists Resolved) (! (is-directory Resolved))) (
+					(read-file Parameters (scope #Err,Data :: (
+						(if (!= (undefined) Err) (
+							(print-error (+ "Unable to open file: " Parameters))
+						) (else (
+							(set Data (to-string Data))
+							(var Viewport (current-viewport))
+							(viewport-load-text Viewport Data)
+						)))
+					)))
+				) (else (
+					(print-command (+ "^rUnable to open: " Resolved))
+				)))
+			)))
+		)))))
+
+		(add-command "open" CommandOpen)
+		(add-command "o" CommandOpen)
+	))
+	(export commands-file-init/0)
 )

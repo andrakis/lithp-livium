@@ -1,0 +1,31 @@
+(
+	(var EchoKeys false)
+
+	(def buffer-string #B :: (
+		(join (map (split (to-string B) "") #X :: ((asc X))) ", ")
+	))
+
+	(def commands-state-init # :: (
+		(var CommandEchoKeys (scope # :: ((scope #Parameters :: (
+			(set EchoKeys (! (get EchoKeys)))
+			(if EchoKeys (
+				(print-error "Echo keys now ON")
+			) (else (
+				(print-error "Echo keys now OFF")
+			)))
+		)))))
+
+		(add-command "echo" CommandEchoKeys)
+
+		(addKeyCallback (scope #Data :: (
+			(if EchoKeys (
+				(erase-command)
+				(print-error (+ "^yKey: " (buffer-string Data)))
+				(cursor-restore)
+				(viewport-cursor (current-viewport))
+			))
+		)))
+	))
+
+	(export commands-state-init/0)
+)

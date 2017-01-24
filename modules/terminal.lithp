@@ -3,5 +3,5 @@
 	(platform v1)
 
 	(var LibPath (get-def __dirname))
-	(import (+ LibPath "/terminal_kit"))
+	(import "terminal_kit")
 )

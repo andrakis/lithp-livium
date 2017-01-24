@@ -6,7 +6,9 @@
 	(platform v1)
 	(var CommandList nil)
 
-	(import (+ (get-def "__dirname") "/commands/file"))
+	(import "switch")
+	(import "src/commands/file")
+	(import "src/commands/state")
 
 	(def add-command #Name,Handler :: (
 		(var CaseClause (case Name Handler))
@@ -31,6 +33,7 @@
 			(term-print "^r ^:")
 			(cursor-restore)
 		)))
+		(viewport-cursor (current-viewport))
 	))
 	(export handle-command/1)
 
@@ -46,30 +49,17 @@
 		(term-exit)
 	))))
 
-	(var CommandOpen (scope # :: ((scope #Parameters :: (
-		(if (== nil Parameters) (
-			(print-error "E32: No file name")
-		) (else (
-			(print-error (+ "^gOpening file: " Parameters))
-			(readFileAsync Parameters (scope #Err,Data :: (
-				(if (!= (undefined) Err) (
-					(print-error (+ "Unable to open file: " Parameters))
-				))
-			)))
-		)))
-	)))))
-
 	(def commands-init (scope # :: (
-		% TODO: This is ugly!
-		(set CommandList (list 
-			(default (scope #Given :: 
+		(set CommandList (list
+			(default (scope #Given ::
 				(scope # :: (call UnknownCommand Given))))
 		))
 
 		(add-command "quit" CommandQuit)
 		(add-command "q" CommandQuit)
 
-		(add-command "o" CommandOpen)
+		(commands-file-init)
+		(commands-state-init)
 	)))
 	(export-global commands-init/0)
 )

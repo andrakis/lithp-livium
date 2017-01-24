@@ -5,7 +5,8 @@
 %  COMMAND  Command mode (brings up command entry)
 (
 	(platform ext)
-	(import (+ (get-def "__dirname") "/commands"))
+	(import "switch")
+	(import "src/commands")
 
 	(var CommandBuffer "")
 	(var LastCommandLength 0)
@@ -16,9 +17,13 @@
 	(def erase-command # :: (
 		(set CurrentMode 'COMMAND')
 		(cursor-move 0 (term-rows))
-		(term-print (+ "\r" (repeat " " (term-cols))))
+		(term-print (+ "\r" (repeat " " (term-cols)) "\r"))
 	))
-	(export-global open-command/0 erase-command/0)
+	(def print-command #Cmd :: (
+		(erase-command)
+		(term-print Cmd)
+	))
+	(export-global open-command/0 erase-command/0 print-command/1)
 	(var CurrentMode 'VIEW')
 	(var ModeViewKeyCallback #Data :: (
 		% (print "Livium key:" Data)
