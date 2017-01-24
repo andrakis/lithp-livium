@@ -6,6 +6,8 @@
 (
 	(platform v1)
 	(platform ext)
+	(import "buffer")
+
 	(var ViewportTopLeft "+")
 	(var ViewportTopRight "+")
 	(var ViewportTop "-")
@@ -18,67 +20,135 @@
 	(var CurrentViewport 0)
 	(var Viewports (list))
 
-	(def viewport-new #StartX,StartY,EndX,EndY,Screenbuffer :: (
-		(dict 
-			(tuple startx StartX) 
-			(tuple starty StartY) 
-			(tuple endx EndX) 
-			(tuple endy EndY) 
-			(tuple screenbuffer Screenbuffer) 
-			(tuple marker 0) % where the cursor is
+	(def read-lines #Viewport,Lines :: (
+		(var Marker (dict-get Viewport marker))
+		(var Begin 10)
+	))
+
+	(def viewport-new #StartX,StartY,EndX,EndY,Screenbuffer,Textbuffer :: (
+		%(if (== nil Screenbuffer) ((set Screenbuffer (buffer-new))))
+		(if (== nil Textbuffer) ((set Textbuffer (list))))
+		(set Textbuffer (list
+			"Welcome to Livium!"
+			"This is a test"
+			"And another test"
+		))
+		(dict
+			(tuple startx StartX)
+			(tuple starty StartY)
+			(tuple endx EndX)
+			(tuple endy EndY)
+			(tuple screenbuffer Screenbuffer)
+			(tuple textbuffer   Textbuffer)
+			(tuple cursorLine 0)
+			(tuple cursorColumn 0)
 		)
 	))
+	(def viewport-load-text #Viewport,Text :: (
+		(dict-set Viewport textbuffer (split Text "\n"))
+		(viewport-render Viewport)
+	))
+	(export viewport-load-text/2)
 	(def viewport-render #Viewport :: (
-		(cursor-save)
 		(var StartX (dict-get Viewport startx))
-		(var EndX (dict-get Viewport endx))
+		(var EndX   (dict-get Viewport endx))
 		(var StartY (dict-get Viewport starty))
-		(var EndY (dict-get Viewport endy))
+		(var EndY   (dict-get Viewport endy))
 		(var Length (- EndX StartX))
 		(var Height (- EndY StartY))
 		(var Output "")
+		(var CursorLine (dict-get Viewport cursorLine))
+		(var CursorColumn (dict-get Viewport cursorColumn))
+		(var TextList (dict-get Viewport textbuffer))
+		(var TopLineNumber 0) % 0 indexed, the line number at top of screen
+		(var BottomLineNumber (get Height))
+		(var BottomLineStr (+ "" (get BottomLineNumber)))
 		(if (== true RenderBorder) (
 			(set Output (+ ViewportTopLeft (repeat ViewportTop (- Length 2)) ViewportTopRight))
 		))
-		(var RenderLine (scope # :: (
-			(repeat " " (- Length 2))
+		(var RenderLine (scope #LineNo :: (
+			% Change from 0-base to 1-base for printing
+			(var LineStr (+ "" (+ LineNo 1)))
+			(var Padding (repeat " " (+ 1 (- (length BottomLineStr) (length LineStr)))))
+			(var LineFromBuffer "")
+			(if (< LineNo (length TextList)) (
+				(set LineFromBuffer (index TextList LineNo))
+				% Grab (EndX-StartX) characters
+				(set LineFromBuffer (slice LineFromBuffer 0 Length))
+				(var LinePadding (repeat " " (- Length (length LineFromBuffer) (length BottomLineStr) 3)))
+				(+ Padding LineStr " " LineFromBuffer LinePadding)
+			) (else (
+				(var LinePadding (repeat " " (- Length (length BottomLineStr) 5)))
+				(+ (repeat " " (+ (length LineStr) (length BottomLineStr))) Padding LinePadding)
+			)))
 		)))
-		(each (seq 2 Height) (scope #LineNo :: (
-			(if (== true RenderBorder) (
-				(set Output (+ Output "\n" ViewportSide (call RenderLine) ViewportSide))
+		(var BLeft (get ViewportSide))
+		(var BRight (get ViewportSide))
+		(if (== false RenderBorder) (
+			(set BLeft "")
+			(set BRight " ")
+		))
+		(each (seq 0 (- Height 2)) (scope #LineNo :: (
+			(if (!= "" Output) (
+				(set Output (+ Output "\n"))
 			))
+			(set Output (+ Output BLeft (call RenderLine (+ TopLineNumber LineNo)) BRight))
 		)))
 		(if (== true RenderBorder) (
-			(set Output (+ Output "\n" 
-				ViewportBottomLeft 
-				(repeat ViewportBottom (- Length 2)) 
+			(set Output (+ Output "\n"
+				ViewportBottomLeft
+				(repeat ViewportBottom (- Length 2))
 				ViewportBottomRight)
 			)
 		))
+		(cursor-save)
 		(cursor-move StartX StartY)
 		(term-print Output)
 		(cursor-restore)
+		(viewport-cursor Viewport)
+	))
+
+	(def viewport-cursor #Viewport :: (
+		(var StartX (dict-get Viewport startx))
+		(var EndX   (dict-get Viewport endx))
+		(var StartY (dict-get Viewport starty))
+		(var EndY   (dict-get Viewport endy))
+		(var Height (- EndY StartY))
+		(var CursorLine (dict-get Viewport cursorLine))
+		(var CursorColumn (dict-get Viewport cursorColumn))
+		(var BottomLineNumber (get Height))
+		(var BottomLineStr (+ "" (get BottomLineNumber)))
+		(var Padding (+ 1 (- (length BottomLineStr) (length (+ "" CursorLine)))))
+		(if RenderBorder (
+			(set CursorLine (+ 2 CursorLine))
+			(set Padding (+ Padding 1))
+		))
+		(cursor-move (+ StartX CursorColumn Padding 2) (+ StartY CursorLine))
 	))
 
 	(def viewports-render # :: (
 		(each Viewports (scope #Viewport :: (
 			(viewport-render Viewport)
 		)))
+		(viewport-cursor (current-viewport))
 	))
-	(export-global viewport-new/5 viewport-render/1)
+	(export-global viewport-new/6 viewports-render/0 viewport-cursor/1)
 
-	% TODO: replace with a list
 	(var Viewport nil)
+	(var CurrentViewport 0)
 	(def viewport_init # :: (
-		(set Viewport (viewport-new 0 0 (term-cols) (- (term-rows) 2) nil))
+		(set Viewport (viewport-new 0 0 (term-cols) (- (term-rows) 2) nil nil))
 		(push Viewports Viewport)
 		(viewports-render)
 	))
 	(export-global viewport_init/0)
 
+	(def current-viewport # :: ((index Viewports CurrentViewport)))
+	(export-global current-viewport/0)
+
 	(if (== true (get-def 'TEST')) (
 		(import (+ (get-def "__dirname") "/../modules/modules"))
-		(set Viewport (viewport-new 0 0 80 25 nil))
+		(set Viewport (viewport-new 0 0 80 25 nil nil))
 		(viewport-render Viewport)
 		(exit)
 	))

@@ -24,8 +24,14 @@
 	))
 	(export-global term-print/*)
 
-	(def cursor-save # :: ((invoke Terminal "saveCursor") (atom nil)))
-	(def cursor-restore # :: ((invoke Terminal "restoreCursor") (atom nil)))
+	(def cursor-save # :: (
+		%(invoke Terminal "saveCursor") (atom nil))
+		(atom nil)
+	))
+	(def cursor-restore # :: (
+		%(invoke Terminal "restoreCursor") (atom nil))
+		(atom nil)
+	))
 	(def cursor-move #X,Y :: ((invoke Terminal "moveTo" X Y) (atom nil)))
 
 	(export-global cursor-save/0 cursor-restore/0 cursor-move/2)

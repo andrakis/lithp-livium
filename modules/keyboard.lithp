@@ -4,7 +4,7 @@
 	(var Stdin (stdin))
 
 	(var LibPath (get-def __dirname))
-	(import (+ LibPath "/lists"))
+	(import "lists")
 
 	(var OnKeyCallbacks (list))
 	(def addKeyCallback #Callback :: (

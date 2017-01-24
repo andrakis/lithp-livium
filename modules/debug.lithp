@@ -1,0 +1,38 @@
+% Debug functions such as assert.
+%
+(
+	% Import tuple/*
+	(platform v1)
+
+	(def assert #Result,OnError,OnSuccess :: (
+		(if (== true Result) (
+			(call OnSuccess Result)
+		) (else (
+			(call OnError Result)
+		)))
+	))
+
+	(def assert #Result :: (
+		% TODO: Bug, scope/1 required due to parser bug
+		(assert Result 
+			(scope # :: ((throw (tuple assert_not_true Result)))) 
+			#Z :: ((do-nothing))
+		)
+	))
+
+	(def do-nothing # :: ((atom nothing)))
+
+	(export-global assert/1 assert/3 do-nothing/0)
+
+	(if (== true (get-def 'TEST')) (
+		(platform ext)
+		(assert true)
+		(try (scope # ::
+			(assert false)
+			(print "ERROR: Assert failed")
+			(exit 1)
+		) #Error :: (
+			(print "SUCCESS")
+		))
+	))
+)

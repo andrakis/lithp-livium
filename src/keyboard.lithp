@@ -1,4 +1,5 @@
 (
+	(import "modules/keyboard")
 	(def keyboard_init # :: (
 		(addKeyCallback (scope #Data :: (
 			(if (== 3 (index Data 0)) (

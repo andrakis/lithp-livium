@@ -1,5 +1,6 @@
 (
 	(platform ext)
+	(import "modules/terminal")
 
 	% These are managed with functions as they as updated when the terminal
 	% is resized.
@@ -17,8 +18,6 @@
 		(if (and (!= true (get-def 'DEBUG')) (!= true (get-def 'TEST'))) (
 			(term-fullscreen true)
 		))
-		(term-print "Terminal size:" (term-cols) "x" (term-rows) "\n")
-		(term-print "Welcome to ^bLivium^g :)\n^wtest\n")
 	))
 	(export terminal_init/0)
 )
